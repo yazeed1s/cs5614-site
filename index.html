@@ -4,14 +4,18 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>CineMatch - CS 5614 Project</title>
+        <meta
+            name="description"
+            content="CineMatch: A hybrid LLM and relational approach for personalized movie recommendation. CS 5614 Database Management Systems, Virginia Tech, Spring 2026."
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
             rel="stylesheet"
         />
-
         <link rel="stylesheet" href="style.css" />
+        <script type="module" src="main.js"></script>
     </head>
 
     <body>
@@ -30,17 +34,19 @@
 
             <img src="static/dummy.png" alt="CineMatch system overview" />
 
-            <section>
+            <!-- About -->
+            <section id="about">
                 <h2>About</h2>
                 <p>
                     CineMatch is a hybrid movie recommendation system where each
-                    component handles the part of the problem it is suited for.
-                    XGBoost handles scoring and ranking. An LLM enriches the
-                    movie database through a PostgreSQL trigger pipeline,
-                    converts natural language queries into SQL, and generates
-                    short explanations for recommendations. PostgreSQL manages
-                    all structured storage, and Apache AGE handles graph
-                    traversal for related-title discovery.
+                    component handles the part of the problem it is best suited
+                    for. A Go backend serves a REST API with JWT auth, an LLM
+                    converts natural-language questions into safe SQL, Apache
+                    AGE runs graph traversals for related-title discovery, and a
+                    React/TypeScript frontend renders the experience. PostgreSQL
+                    16 with PostGIS manages all structured storage, and an
+                    enrichment trigger pipeline auto-queues new movies for
+                    LLM-generated mood/theme tagging.
                 </p>
                 <p>
                     The system collects structured preference data at signup so
@@ -50,128 +56,1505 @@
                 </p>
 
                 <div class="links">
-                    <a href="Checkpoint_(Lyons)_(Alharthi)_(Young)_(Tessema)_(Alamoudi).pdf" target="_blank">Proposal (PDF)</a>
+                    <a
+                        href="Checkpoint_(Lyons)_(Alharthi)_(Young)_(Tessema)_(Alamoudi)_1.pdf"
+                        target="_blank"
+                        >Checkpoint 1 (PDF)</a
+                    >
+                    <a
+                        href="Checkpoint_(Lyons)_(Alharthi)_(Young)_(Tessema)_(Alamoudi)_2.pdf"
+                        target="_blank"
+                        >Checkpoint 2 (PDF)</a
+                    >
+                    <p>Checkpoint 3 (Coming Soon)</p>
+                    <a
+                        href="Checkpoint_(Lyons)_(Alharthi)_(Young)_(Tessema)_(Alamoudi).pdf"
+                        target="_blank"
+                        >Proposal (PDF)</a
+                    >
                     <a
                         href="https://github.com/yazeed1s/cenimatch"
                         target="_blank"
                         >Repository</a
+                    >
+                    <a
+                        href="https://cenimatch.aramoudi.com/"
+                        target="_blank"
+                        class="live-demo-btn"
+                        >Live Demo</a
                     >
                 </div>
             </section>
 
             <hr />
 
-            <section>
-                <h2>Architecture</h2>
-                <img
-                    class="arch-diagram"
-                    src="static/arch.png"
-                    alt="CineMatch system architecture diagram"
-                />
-            </section>
-
-            <hr />
-
-            <section>
-                <h2>Features</h2>
-                <ul>
-                    <li>
-                        Interactive onboarding for cold-start personalization
-                    </li>
-                    <li>
-                        LLM-triggered database enrichment on movie insertion
-                    </li>
-                    <li>XGBoost ranking with structured feature vectors</li>
-                    <li>Conversational movie search via text-to-SQL</li>
-                    <li>Graph-based related movie discovery (Apache AGE)</li>
-                    <li>Mood-based quick pick with six mood categories</li>
-                    <li>City-level live activity map rendered with ECharts</li>
-                    <li>Analytics dashboards backed by PostgreSQL views</li>
-                </ul>
-            </section>
-
-            <hr />
-
-            <section>
-                <h2>Checkpoint 1</h2>
-                <p>
-                    We finalized the database schema, built the backend
-                    foundation in Go, and created tooling for data ingestion,
-                    migrations, and local development. Key design decisions
-                    around LLM guardrails and location-based recommendations
-                    were documented.
-                </p>
-
-                <h3>Completed</h3>
-                <ul class="progress-list">
-                    <li class="done">
-                        PostgreSQL schema &dash; 14 tables, 3 enums, enrichment
-                        trigger on movie insert
-                    </li>
-                    <li class="done">
-                        Dataset downloader CLI &dash; 7 sources (IMDb + Kaggle),
-                        concurrent downloads, multiple auth methods
-                    </li>
-                    <li class="done">
-                        Go API server &dash; chi router, CORS, JWT auth
-                        middleware, health endpoint
-                    </li>
-                    <li class="done">
-                        Database layer &dash; pgxpool with custom type
-                        registration, transaction support
-                    </li>
-                    <li class="done">
-                        Migration CLI &dash; reset, drop, create, seed, and
-                        status commands
-                    </li>
-                    <li class="done">
-                        Config system &dash; env loading with dev defaults and
-                        strict prod mode
-                    </li>
-                    <li class="done">
-                        Docker Compose &dash; Postgres 16 with Makefile and
-                        run.sh tooling
-                    </li>
-                </ul>
-
-                <h3>In Progress</h3>
-                <ul class="progress-list">
-                    <li class="wip">Python scoring service (FastAPI)</li>
-                    <li class="wip">User questionnaire &amp; preference insertion</li>
-                    <li class="wip">React dashboard &amp; frontend pages</li>
-                </ul>
-
-                <img
-                    class="arch-diagram"
-                    src="static/tm.png"
-                    alt="Project timeline and task assignment diagram"
-                />
-            </section>
-
-            <hr />
-
-            <section>
+            <!-- Stack -->
+            <section id="stack">
                 <h2>Stack</h2>
                 <div class="tech-tags">
-                    <span>Go</span>
-                    <span>Python / FastAPI</span>
+                    <span>Go 1.26</span>
+                    <span>Chi Router</span>
                     <span>PostgreSQL 16</span>
                     <span>Apache AGE</span>
-                    <span>XGBoost</span>
-                    <span>Gemini Flash</span>
+                    <span>PostGIS</span>
+                    <span>pgxpool</span>
+                    <span>OpenRouter / Llama 3.3</span>
                     <span>React / TypeScript</span>
+                    <span>Vite</span>
                     <span>ECharts</span>
                     <span>Docker</span>
+                    <span>Cloudflared</span>
+                    <span>Nginx</span>
+                    <span>JWT + bcrypt</span>
                 </div>
             </section>
 
             <hr />
 
-            <section>
+            <!-- Codebase Snapshot -->
+            <section id="snapshot">
+                <h2>Codebase Snapshot</h2>
+                <p>
+                    Numbers below are pulled from the <code>tokei</code> CLI
+                    tool.
+                </p>
+                <table class="snapshot-table metrics-table">
+                    <thead>
+                        <tr>
+                            <th>Area</th>
+                            <th>Files</th>
+                            <th>Code Lines</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Go</td>
+                            <td>41</td>
+                            <td>4,471</td>
+                        </tr>
+                        <tr>
+                            <td>Frontend (TS/TSX/CSS/HTML)</td>
+                            <td>22</td>
+                            <td>4,128</td>
+                        </tr>
+                        <tr>
+                            <td>SQL</td>
+                            <td>3</td>
+                            <td>229</td>
+                        </tr>
+                        <tr>
+                            <td>Shell scripts</td>
+                            <td>6</td>
+                            <td>1,001</td>
+                        </tr>
+                        <tr>
+                            <td>Total project</td>
+                            <td>98</td>
+                            <td>13,276</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <hr />
+
+            <!-- API Surface -->
+            <section id="api-surface">
+                <h2>Real API Surface</h2>
+                <p>
+                    Routes below are pulled from
+                    <code>internal/infra/http/server/server.go</code>. The
+                    current API surface has 20 HTTP endpoints total (19 under
+                    <code>/api</code> + 1 health route).
+                </p>
+                <h3>Public</h3>
+                <ul>
+                    <li><code>GET /health</code></li>
+                    <li><code>POST /api/auth/register</code></li>
+                    <li><code>POST /api/auth/signup</code> (register + onboarding in one transaction)</li>
+                    <li><code>POST /api/auth/login</code></li>
+                    <li><code>POST /api/auth/refresh</code></li>
+                    <li><code>POST /api/auth/logout</code></li>
+                    <li><code>GET /api/movies</code> (supports <code>q</code>, <code>genre</code>, <code>limit</code>, <code>offset</code>)</li>
+                    <li><code>GET /api/movies/search</code></li>
+                    <li><code>GET /api/movies/top-rated/all-time</code></li>
+                    <li><code>GET /api/movies/trending/week</code></li>
+                    <li><code>GET /api/movies/{id}</code></li>
+                    <li><code>GET /api/movies/{id}/crew</code></li>
+                    <li><code>GET /api/movies/{id}/related</code></li>
+                    <li><code>GET /api/movies/{id}/graph-related</code></li>
+                    <li><code>POST /api/chat</code></li>
+                </ul>
+                <h3>Protected (JWT required)</h3>
+                <ul>
+                    <li><code>POST /api/users/onboard</code></li>
+                    <li><code>GET /api/feedback/{movieID}</code></li>
+                    <li><code>POST /api/feedback</code></li>
+                    <li><code>POST /api/feedback/not-interested</code></li>
+                    <li><code>GET /api/recommendations/graph</code></li>
+                </ul>
+            </section>
+
+            <hr />
+
+            <!-- Project Status Matrix -->
+            <section id="status-matrix">
+                <h2>Project Status Matrix</h2>
+                <p>
+                    This matrix separates what is live in backend routes, what
+                    currently runs with mock data in UI, and what is wired in
+                    frontend but not exposed in the backend yet.
+                </p>
+                <table class="snapshot-table status-matrix-table">
+                    <thead>
+                        <tr>
+                            <th>Area</th>
+                            <th>Capability</th>
+                            <th>Status</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>API</td>
+                            <td><code>GET /health</code></td>
+                            <td><span class="status-badge status-live">Live</span></td>
+                            <td>Health check route is registered and returns <code>200</code></td>
+                        </tr>
+                        <tr>
+                            <td>API</td>
+                            <td>Auth + refresh rotation</td>
+                            <td><span class="status-badge status-live">Live</span></td>
+                            <td><code>/api/auth/register|signup|login|refresh|logout</code></td>
+                        </tr>
+                        <tr>
+                            <td>API</td>
+                            <td>Movie catalog + search + details + crew</td>
+                            <td><span class="status-badge status-live">Live</span></td>
+                            <td><code>/api/movies*</code> routes are active</td>
+                        </tr>
+                        <tr>
+                            <td>API</td>
+                            <td>Onboarding save endpoint</td>
+                            <td><span class="status-badge status-live">Live</span></td>
+                            <td><code>POST /api/users/onboard</code> behind JWT middleware</td>
+                        </tr>
+                        <tr>
+                            <td>API</td>
+                            <td>Chat NL -> SQL -> query execution</td>
+                            <td><span class="status-badge status-live">Live</span></td>
+                            <td><code>/api/chat</code> with prompt + SQL guard</td>
+                        </tr>
+                        <tr>
+                            <td>API</td>
+                            <td>Graph recommendations</td>
+                            <td><span class="status-badge status-live">Live</span></td>
+                            <td><code>/api/recommendations/graph</code> + graph-related movie endpoint</td>
+                        </tr>
+                        <tr>
+                            <td>API</td>
+                            <td>Feedback + not interested loop</td>
+                            <td><span class="status-badge status-live">Live</span></td>
+                            <td>Writes both relational and graph edges in one transaction</td>
+                        </tr>
+                        <tr>
+                            <td>Frontend</td>
+                            <td>Home / Search / Movie / Chat routes</td>
+                            <td><span class="status-badge status-live">Live</span></td>
+                            <td>Connected to <code>realApi</code> and live backend routes</td>
+                        </tr>
+                        <tr>
+                            <td>Frontend</td>
+                            <td>5-step onboarding signup flow</td>
+                            <td><span class="status-badge status-live">Live</span></td>
+                            <td>Uses atomic signup endpoint <code>/api/auth/signup</code></td>
+                        </tr>
+                        <tr>
+                            <td>Frontend</td>
+                            <td>Dashboard analytics page</td>
+                            <td><span class="status-badge status-demo">UI Demo</span></td>
+                            <td>Dashboard page is currently bound to <code>mockApi</code></td>
+                        </tr>
+                        <tr>
+                            <td>LLM</td>
+                            <td>Schema-grounded system prompt</td>
+                            <td><span class="status-badge status-live">Live</span></td>
+                            <td><code>schema_prompt.go</code> defines full SQL contract + graph mapping rules</td>
+                        </tr>
+                        <tr>
+                            <td>LLM</td>
+                            <td>SQL safety guard</td>
+                            <td><span class="status-badge status-live">Live</span></td>
+                            <td>SELECT-only, blocked DML/DDL keywords, required LIMIT</td>
+                        </tr>
+                        <tr>
+                            <td>LLM</td>
+                            <td>Retry + multi-model fallback chain</td>
+                            <td><span class="status-badge status-live">Live</span></td>
+                            <td>Primary retries x5, then 4 fallback models</td>
+                        </tr>
+                        <tr>
+                            <td>Data</td>
+                            <td>14-table relational schema + enums</td>
+                            <td><span class="status-badge status-live">Live</span></td>
+                            <td><code>schema-01.sql</code> with domain-specific enums and constraints</td>
+                        </tr>
+                        <tr>
+                            <td>Data</td>
+                            <td>Movie enrichment trigger queue</td>
+                            <td><span class="status-badge status-live">Live</span></td>
+                            <td><code>trg_movie_enrich</code> inserts into <code>enrichment_queue</code> on new movies</td>
+                        </tr>
+                        <tr>
+                            <td>Data</td>
+                            <td>Apache AGE graph support</td>
+                            <td><span class="status-badge status-live">Live</span></td>
+                            <td>AGE loaded in DB connections and graph build script available</td>
+                        </tr>
+                        <tr>
+                            <td>Ops</td>
+                            <td>CLI workflows (app, dl, migrate, psql)</td>
+                            <td><span class="status-badge status-live">Live</span></td>
+                            <td><code>run.sh</code> + <code>Makefile</code> commands wired</td>
+                        </tr>
+                        <tr>
+                            <td>Ops</td>
+                            <td>Graceful shutdown</td>
+                            <td><span class="status-badge status-live">Live</span></td>
+                            <td>Signal handling with 10s server shutdown timeout</td>
+                        </tr>
+                        <tr>
+                            <td>Ops</td>
+                            <td>Migration utility</td>
+                            <td><span class="status-badge status-live">Live</span></td>
+                            <td>Supports <code>reset|drop|create|indexes|status</code></td>
+                        </tr>
+                        <tr>
+                            <td>Page</td>
+                            <td>Mermaid rendering bootstrap</td>
+                            <td><span class="status-badge status-live">Live</span></td>
+                            <td><code>main.js</code> added; diagrams initialized client-side</td>
+                        </tr>
+                        <tr>
+                            <td>API Gap</td>
+                            <td><code>/api/analytics/overview</code></td>
+                            <td><span class="status-badge status-planned">Planned</span></td>
+                            <td>Frontend client references it, backend route is not registered</td>
+                        </tr>
+                        <tr>
+                            <td>API Gap</td>
+                            <td><code>/api/search/nl</code> + <code>/api/analytics/nl</code></td>
+                            <td><span class="status-badge status-planned">Planned</span></td>
+                            <td>Frontend client includes calls, backend currently uses <code>/api/chat</code></td>
+                        </tr>
+                        <tr>
+                            <td>API Gap</td>
+                            <td><code>/location</code> ingest endpoint</td>
+                            <td><span class="status-badge status-planned">Planned</span></td>
+                            <td>Frontend sends geolocation, backend route not present yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <hr />
+
+            <!-- Runtime Operations -->
+            <section id="runtime-ops">
+                <h2>Runtime Operations</h2>
+                <p>
+                    API startup and shutdown behavior is explicit in
+                    <code>cmd/cenimatch</code> and <code>internal/container</code>.
+                </p>
+                <table class="snapshot-table">
+                    <thead>
+                        <tr>
+                            <th>Lifecycle Step</th>
+                            <th>Behavior</th>
+                            <th>Code Path</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Boot</td>
+                            <td>Loads environment, parses typed config, constructs container, wires DB, services, and HTTP server</td>
+                            <td><code>cmd/cenimatch/main.go</code>, <code>internal/container/container.go</code></td>
+                        </tr>
+                        <tr>
+                            <td>Serve</td>
+                            <td>Starts HTTP server in a goroutine and keeps main process on signal wait</td>
+                            <td><code>App.Start()</code>, <code>App.Run()</code></td>
+                        </tr>
+                        <tr>
+                            <td>Shutdown trigger</td>
+                            <td>Listens for <code>SIGINT</code> and <code>SIGTERM</code></td>
+                            <td><code>signal.Notify(...)</code></td>
+                        </tr>
+                        <tr>
+                            <td>Shutdown window</td>
+                            <td>Graceful HTTP shutdown with 10-second timeout, then DB pool close</td>
+                            <td><code>container.Shutdown()</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <hr />
+
+            <!-- Connection Bootstrap -->
+            <section id="connection-bootstrap">
+                <h2>Connection Bootstrap</h2>
+                <p>
+                    Each new DB connection is prepared for both relational SQL
+                    and AGE graph calls before request handling starts.
+                </p>
+                <table class="snapshot-table">
+                    <thead>
+                        <tr>
+                            <th>Step</th>
+                            <th>Purpose</th>
+                            <th>Implementation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Parse URL + init pool config</td>
+                            <td>Standardized pgxpool setup from <code>DATABASE_URL</code></td>
+                            <td><code>database.NewConnection()</code></td>
+                        </tr>
+                        <tr>
+                            <td>Register enum types</td>
+                            <td>Registers <code>tag_source</code>, <code>crew_role</code>, <code>mood_type</code> in type map</td>
+                            <td><code>AfterConnect</code> hook</td>
+                        </tr>
+                        <tr>
+                            <td>Activate AGE context</td>
+                            <td>Runs <code>LOAD 'age'</code> and sets <code>search_path = ag_catalog, "$user", public</code></td>
+                            <td><code>AfterConnect</code> hook</td>
+                        </tr>
+                        <tr>
+                            <td>Health gate</td>
+                            <td>Pool <code>Ping</code> must succeed before container starts serving</td>
+                            <td><code>pool.Ping(...)</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <hr />
+
+            <!-- Config Modes -->
+            <section id="config-modes">
+                <h2>Configuration Modes</h2>
+                <p>
+                    Config loading has separate behavior for dev and production
+                    to speed local work while enforcing stricter prod settings.
+                </p>
+                <table class="snapshot-table">
+                    <thead>
+                        <tr>
+                            <th>Setting</th>
+                            <th>Dev Mode</th>
+                            <th>Production Mode</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>BCRYPT_COST</code></td>
+                            <td>Default 10</td>
+                            <td>Required from env</td>
+                        </tr>
+                        <tr>
+                            <td><code>JWT_EXPIRATION</code></td>
+                            <td>Default 24h</td>
+                            <td>Required from env</td>
+                        </tr>
+                        <tr>
+                            <td><code>REFRESH_TOKEN_EXPIRATION</code></td>
+                            <td>Default 30 days</td>
+                            <td>Required from env</td>
+                        </tr>
+                        <tr>
+                            <td>Core infra vars</td>
+                            <td><code>DATABASE_URL</code>, <code>PORT</code>, <code>JWT_SECRET</code>, <code>JWT_ISSUER</code> required</td>
+                            <td>Same required set</td>
+                        </tr>
+                        <tr>
+                            <td><code>CORS_ALLOWED_ORIGINS</code></td>
+                            <td>Optional CSV, merged with local defaults</td>
+                            <td>Optional CSV, appended to default allowed origins</td>
+                        </tr>
+                        <tr>
+                            <td><code>OPENROUTER_API_KEY</code></td>
+                            <td>Optional</td>
+                            <td>Optional</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <hr />
+
+            <!-- CLI Tooling -->
+            <section id="cli-tooling">
+                <h2>CLI Tooling</h2>
+                <p>
+                    The project ships with executable workflows for app runtime,
+                    downloads, and migration operations.
+                </p>
+                <table class="snapshot-table">
+                    <thead>
+                        <tr>
+                            <th>Command</th>
+                            <th>What It Does</th>
+                            <th>Entry Point</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>./run.sh app</code></td>
+                            <td>Builds and runs API server binary</td>
+                            <td><code>cmd/cenimatch</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>./run.sh dl ...</code></td>
+                            <td>Builds and runs downloader with source filters, worker count, and output directory</td>
+                            <td><code>cmd/download</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>./run.sh migrate reset|drop|create|indexes|status</code></td>
+                            <td>Runs migration utility commands</td>
+                            <td><code>cmd/migrate</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>./run.sh migrate seed</code></td>
+                            <td>Runs seed pipeline script</td>
+                            <td><code>migration/seed.sh</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>make db</code> / <code>make db-stop</code></td>
+                            <td>Starts or stops database stack with Docker Compose</td>
+                            <td><code>Makefile</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>./run.sh psql</code></td>
+                            <td>Opens interactive psql session inside running DB container</td>
+                            <td><code>run.sh</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <hr />
+
+            <!-- Migration Safety -->
+            <section id="migration-safety">
+                <h2>Migration Safety Notes</h2>
+                <p>
+                    Migration behavior is catalog-driven and explicit about
+                    destructive operations.
+                </p>
+                <table class="snapshot-table">
+                    <thead>
+                        <tr>
+                            <th>Behavior</th>
+                            <th>Details</th>
+                            <th>Source</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Drop sequencing</td>
+                            <td>Drops tables first, then enums, then sequences using Postgres catalogs</td>
+                            <td><code>internal/migrator/migrator.go</code></td>
+                        </tr>
+                        <tr>
+                            <td>Sync pauses</td>
+                            <td>Includes short waits between drop phases to avoid catalog timing issues</td>
+                            <td><code>time.Sleep(500ms)</code></td>
+                        </tr>
+                        <tr>
+                            <td>Schema split</td>
+                            <td>Tables from <code>schema-01.sql</code>, indexes from <code>schema-02-indexes.sql</code></td>
+                            <td><code>CreateTables()</code>, <code>CreateIndexes()</code></td>
+                        </tr>
+                        <tr>
+                            <td>Status introspection</td>
+                            <td>Shows connection, table count, and table list</td>
+                            <td><code>migrate status</code></td>
+                        </tr>
+                        <tr>
+                            <td>Command timeouts</td>
+                            <td><code>create/indexes/reset</code> use 30m context; lighter commands use 30s</td>
+                            <td><code>timeoutForCommand()</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <hr />
+
+            <!-- Downloader Reliability -->
+            <section id="downloader-reliability">
+                <h2>Downloader Reliability</h2>
+                <p>
+                    The download pipeline is generic and source-agnostic, with
+                    built-in protection for common ingestion failures.
+                </p>
+                <table class="snapshot-table">
+                    <thead>
+                        <tr>
+                            <th>Capability</th>
+                            <th>Implementation Detail</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Pluggable auth strategies</td>
+                            <td><code>NoAuth</code>, <code>BearerToken</code>, <code>BasicAuth</code>, <code>APIKey</code> via shared <code>AuthMethod</code> interface</td>
+                        </tr>
+                        <tr>
+                            <td>Controlled concurrency</td>
+                            <td>Goroutines with worker semaphore to cap parallel downloads</td>
+                        </tr>
+                        <tr>
+                            <td>Archive handling</td>
+                            <td>Supports direct file downloads, <code>.gz</code> extraction, and zip extraction</td>
+                        </tr>
+                        <tr>
+                            <td>Zip-slip protection</td>
+                            <td>Validates extracted path stays under target directory before writing</td>
+                        </tr>
+                        <tr>
+                            <td>Resume-friendly behavior</td>
+                            <td>Skips already downloaded/extracted files where possible</td>
+                        </tr>
+                        <tr>
+                            <td>Source selection UX</td>
+                            <td><code>--list</code> and source alias expansion (<code>imdb</code>, <code>tmdb</code>, <code>netflix</code>, etc.)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <hr />
+
+            <!-- Security Internals -->
+            <section id="security-internals">
+                <h2>Security Internals</h2>
+                <p>
+                    Access and refresh tokens are handled as separate concerns
+                    with rotation and server-side revocation checks.
+                </p>
+                <table class="snapshot-table">
+                    <thead>
+                        <tr>
+                            <th>Control</th>
+                            <th>Current Behavior</th>
+                            <th>Implementation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Access tokens</td>
+                            <td>HS256 JWT with <code>sub</code>, <code>username</code>, <code>iss</code>, <code>iat</code>, <code>exp</code></td>
+                            <td><code>internal/infra/security/jwt.go</code></td>
+                        </tr>
+                        <tr>
+                            <td>Refresh format</td>
+                            <td><code>uuid:hex_secret</code>; database stores <code>sha256(secret)</code>, not raw secret</td>
+                            <td><code>internal/infra/security/refresh.go</code></td>
+                        </tr>
+                        <tr>
+                            <td>Rotation + revoke</td>
+                            <td>Refresh revokes previous token before issuing new pair</td>
+                            <td><code>internal/service/auth.go</code></td>
+                        </tr>
+                        <tr>
+                            <td>Metadata capture</td>
+                            <td>Refresh tokens can store request IP and User-Agent</td>
+                            <td><code>tokenMeta()</code> + <code>StoreRefreshToken()</code></td>
+                        </tr>
+                        <tr>
+                            <td>Auth middleware</td>
+                            <td>Accepts cookie or bearer token, validates JWT, injects user context</td>
+                            <td><code>internal/infra/http/middleware/auth.go</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <hr />
+
+            <!-- API Envelope -->
+            <section id="api-envelope">
+                <h2>API Envelope Contract</h2>
+                <p>
+                    API responses follow a consistent envelope structure so
+                    frontend parsing stays uniform across endpoints.
+                </p>
+                <pre><code>{
+  "success": true,
+  "data": { "...": "..." }
+}
+
+{
+  "success": false,
+  "error": { "code": "INVALID_REQUEST" }
+}</code></pre>
+            </section>
+
+            <hr />
+
+            <!-- Frontend Backend Parity -->
+            <section id="parity-gaps">
+                <h2>Frontend / Backend Parity</h2>
+                <p>
+                    This table tracks calls referenced in frontend API clients
+                    against routes currently registered in backend server setup.
+                </p>
+                <table class="snapshot-table">
+                    <thead>
+                        <tr>
+                            <th>Route</th>
+                            <th>Frontend Usage</th>
+                            <th>Backend Route Status</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>/api/chat</code></td>
+                            <td>Used in Chat page</td>
+                            <td><span class="status-badge status-live">Live</span></td>
+                            <td>Core NL query path in production frontend</td>
+                        </tr>
+                        <tr>
+                            <td><code>/api/analytics/overview</code></td>
+                            <td>Referenced in <code>realApi</code></td>
+                            <td><span class="status-badge status-planned">Planned</span></td>
+                            <td>Dashboard currently uses <code>mockApi</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>/api/search/nl</code></td>
+                            <td>Referenced in Search page client</td>
+                            <td><span class="status-badge status-planned">Planned</span></td>
+                            <td>Backend currently exposes <code>/api/chat</code> for NL SQL</td>
+                        </tr>
+                        <tr>
+                            <td><code>/api/analytics/nl</code></td>
+                            <td>Referenced in dashboard client helpers</td>
+                            <td><span class="status-badge status-planned">Planned</span></td>
+                            <td>No server route registration yet</td>
+                        </tr>
+                        <tr>
+                            <td><code>/location</code></td>
+                            <td>Location send call in Home page client</td>
+                            <td><span class="status-badge status-planned">Planned</span></td>
+                            <td>No server route registration yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <hr />
+
+            <!-- Page Reliability -->
+            <section id="page-reliability">
+                <h2>Page Reliability Notes</h2>
+                <ul>
+                    <li><strong>Mermaid bootstrap script:</strong> <code>main.js</code> is now included to initialize diagrams client-side.</li>
+                    <li><strong>Graceful fallback:</strong> if Mermaid CDN cannot load, raw diagram source remains visible instead of blank output.</li>
+                    <li><strong>Large diagrams:</strong> focused wrappers keep complex architecture charts scrollable on smaller screens.</li>
+                </ul>
+            </section>
+
+            <hr />
+
+            <!-- System Architecture -->
+            <section id="architecture">
+                <h2>System Architecture</h2>
+                <div class="mermaid">
+                    flowchart LR
+                    Browser(["Browser, React/TS"])
+                    subgraph BACKEND["Go Backend - Chi Router"]
+                        direction TB
+                        MW["Middleware\nLogger, CORS, JWT, RealIP"]
+                        HANDLERS["Handlers\nAuth, Movies, Chat\nOnboarding, Feedback, Graph"]
+                        SERVICES["Services\nAuth, Chat\nOnboarding, Feedback"]
+                        REPOS["Repositories\nUser Repo, Movie Repo\nFeedback Repo"]
+                    end
+                    subgraph DATA["Data Layer"]
+                        direction TB
+                        PG[("PostgreSQL 16\n14 tables, 3 enums\nGIN, PostGIS")]
+                        AGE[("Apache AGE\nmovie_graph\nCypher queries")]
+                        QUEUE["Enrichment Queue\nTrigger pipeline"]
+                    end
+                    LLM["OpenRouter LLM\nLlama 3.3 70B + fallbacks"]
+                    Browser --> MW --> HANDLERS --> SERVICES --> REPOS
+                    REPOS --> PG
+                    REPOS --> AGE
+                    SERVICES -- "text-to-SQL" --> LLM
+                    PG -- "trg_movie_enrich" --> QUEUE
+                </div>
+            </section>
+
+            <hr />
+
+            <!-- Backend Layers -->
+            <section id="backend">
+                <h2>Backend Layer Diagram</h2>
+                <p>
+                    The Go backend follows a strict layered architecture:
+                    handlers only decode/encode HTTP, services own all business
+                    logic, and repositories own SQL. Security interfaces
+                    (bcrypt, JWT, refresh tokens) are injected via ports.
+                </p>
+                <h3>Technical Excellence</h3>
+                <ul>
+                    <li><strong>Layer boundaries are enforced:</strong> handlers parse HTTP, services run business logic, and repositories own SQL.</li>
+                    <li><strong>Dependency injection through ports:</strong> security and database dependencies are wired as interfaces, which keeps services isolated from concrete implementations.</li>
+                    <li><strong>Transaction safety:</strong> <code>WithTx</code> is used for multi-step writes (like signup + onboarding) so partial writes are rolled back on failure.</li>
+                </ul>
+                <div class="mermaid mermaid-focus">
+                    flowchart LR
+                    Client(["Client"])
+                    subgraph HTTP["HTTP Layer - Chi"]
+                        direction TB
+                        MW["Middleware\nlogger, recoverer\nCORS, JWT"]
+                        H_AUTH["Auth Handler"]
+                        H_MOV["Movies Handler"]
+                        H_CHAT["Chat Handler"]
+                        H_ON["Onboarding Handler"]
+                        H_FB["Feedback Handler"]
+                        H_REC["Graph Reco Handler"]
+                    end
+                    subgraph SVC["Service Layer"]
+                        direction TB
+                        S_AUTH["auth.go"]
+                        S_CHAT["chat.go"]
+                        S_ON["onboarding.go"]
+                        S_FB["feedback.go"]
+                    end
+                    subgraph SEC["Security"]
+                        direction TB
+                        BCRYPT["BcryptHasher"]
+                        JWT_NODE["JWT HS256\n+ refresh rotation"]
+                    end
+                    subgraph REPO["Repository Layer"]
+                        direction TB
+                        R_USER["user_repo.go"]
+                        R_MOV["movies_repo.go\nCTE + lateral joins"]
+                        R_GRAPH["Graph queries\ncypher()"]
+                    end
+                    subgraph DB["PostgreSQL 16"]
+                        DBM["DB Manager\npgxpool + WithTx"]
+                        PG[("Relational\nJSONB, GIN")]
+                        AGE2[("Apache AGE")]
+                    end
+                    Client --> MW --> H_AUTH & H_MOV & H_CHAT & H_ON & H_FB & H_REC
+                    H_AUTH --> S_AUTH
+                    H_MOV --> S_CHAT
+                    H_CHAT --> S_CHAT
+                    H_ON --> S_ON
+                    H_FB --> S_FB
+                    H_REC --> S_FB
+                    S_AUTH --> SEC & R_USER
+                    S_CHAT --> R_MOV
+                    S_ON --> R_USER
+                    S_FB --> R_MOV & R_GRAPH
+                    R_USER & R_MOV & R_GRAPH --> DBM
+                    DBM --> PG & AGE2
+                </div>
+            </section>
+
+            <hr />
+
+            <!-- Atomic Write Flows -->
+            <section id="atomic-flows">
+                <h2>Atomic Write Flows</h2>
+                <p>
+                    Multi-step writes are wrapped in a shared transaction helper
+                    so profile, feedback, and graph state stay consistent.
+                </p>
+                <table class="snapshot-table">
+                    <thead>
+                        <tr>
+                            <th>Flow</th>
+                            <th>What Happens in One Transaction</th>
+                            <th>Failure Behavior</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>POST /api/auth/signup</code></td>
+                            <td>Create user, preference JSONB, mood profile, graph user node, liked/disliked graph edges</td>
+                            <td>Any failure rolls back all writes</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST /api/users/onboard</code></td>
+                            <td>Update preferences + mood profile, clear old graph edges, rebuild WATCHED/RATED edges</td>
+                            <td>No partial profile or graph drift</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST /api/feedback</code></td>
+                            <td>Upsert watch history + user feedback, then sync graph WATCHED/RATED edges</td>
+                            <td>Relational and graph signals stay aligned</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST /api/feedback/not-interested</code></td>
+                            <td>Upsert <code>not_interested</code> relational flag and update graph edge attributes</td>
+                            <td>Preference exclusion is applied consistently</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <hr />
+
+            <!-- Database Schema ER -->
+            <section id="schema">
+                <h2>Database Schema</h2>
+                <p>
+                    14 tables across four domains: movie catalog, user identity,
+                    interaction tracking, and infrastructure. Movies are keyed
+                    on <code>tmdb_id</code>, users on <code>UUID</code>. Three
+                    PostgreSQL enums enforce type safety:
+                    <code>tag_source</code>, <code>crew_role</code>,
+                    <code>mood_type</code>. PostGIS <code>GEOGRAPHY</code>
+                    columns on feedback and locations enable spatial queries.
+                </p>
+                <h3>Technical Excellence</h3>
+                <ul>
+                    <li><strong>Relational core:</strong> 14 tables with clear domain split and enum constraints for tag source, crew role, and mood type.</li>
+                    <li><strong>Practical Postgres types:</strong> <code>JSONB</code> stores preference weights, arrays track mood IDs, and PostGIS <code>GEOGRAPHY</code> supports location-aware features.</li>
+                    <li><strong>Trigger-based enrichment queue:</strong> new movies are automatically queued for enrichment through <code>trg_movie_enrich</code>.</li>
+                </ul>
+
+                <h3>Movie Catalog Domain</h3>
+                <div class="mermaid">
+                    erDiagram
+                    movies ||--o{ movie_genres : "has"
+                    movies ||--o{ movie_tags : "tagged"
+                    movies ||--o{ movie_crew : "credits"
+                    movies ||--o{ enrichment_queue : "triggers"
+                    genres ||--o{ movie_genres : "categorizes"
+                    persons ||--o{ movie_crew : "performs"
+                    movies {
+                        int tmdb_id PK
+                        varchar imdb_id
+                        text title
+                        int release_year
+                        int runtime_min
+                        float vote_avg
+                        bigint budget
+                        bigint revenue
+                        boolean enriched
+                    }
+                    genres {
+                        serial id PK
+                        varchar name UK
+                    }
+                    movie_genres {
+                        int movie_id FK
+                        int genre_id FK
+                    }
+                    persons {
+                        varchar imdb_id PK
+                        text primary_name
+                        int birth_year
+                    }
+                    movie_crew {
+                        serial id PK
+                        int movie_id FK
+                        varchar person_id FK
+                        crew_role role
+                        text character
+                    }
+                    movie_tags {
+                        serial id PK
+                        int movie_id FK
+                        varchar tag_key
+                        varchar tag_value
+                        float confidence
+                        tag_source source
+                    }
+                    enrichment_queue {
+                        serial id PK
+                        int movie_id FK
+                        varchar status
+                        int attempts
+                    }
+                </div>
+
+                <h3>User &amp; Interaction Domain</h3>
+                <div class="mermaid">
+                    erDiagram
+                    users ||--o| user_preferences : "has"
+                    users ||--o| user_mood_profile : "has"
+                    users ||--o{ watch_history : "watches"
+                    users ||--o{ user_feedback : "rates"
+                    users ||--o{ recommendations : "receives"
+                    users ||--o{ refresh_tokens : "authenticates"
+                    users ||--o{ activity_events : "generates"
+                    users ||--o{ user_locations : "located"
+                    users {
+                        uuid id PK
+                        varchar username UK
+                        text email UK
+                        text password_hash
+                    }
+                    user_preferences {
+                        uuid user_id PK
+                        jsonb genre_weights
+                        int runtime_pref
+                        int decade_low
+                        int decade_high
+                    }
+                    user_mood_profile {
+                        uuid user_id PK
+                        int_arr liked
+                        int_arr disliked
+                        jsonb attributes
+                    }
+                    watch_history {
+                        serial id PK
+                        uuid user_id FK
+                        int movie_id FK
+                        boolean completed
+                    }
+                    user_feedback {
+                        serial id PK
+                        uuid user_id FK
+                        int movie_id FK
+                        float rating
+                        geography location
+                    }
+                    user_locations {
+                        serial id PK
+                        uuid user_id FK
+                        geography location
+                        text city
+                    }
+                    recommendations {
+                        serial id PK
+                        uuid user_id FK
+                        int movie_id FK
+                        float score
+                        text explanation
+                    }
+                    activity_events {
+                        serial id PK
+                        uuid user_id FK
+                        int movie_id FK
+                        text city_state
+                    }
+                    refresh_tokens {
+                        uuid id PK
+                        uuid user_id FK
+                        varchar token_hash UK
+                    }
+                </div>
+            </section>
+
+            <hr />
+
+            <!-- LLM Text-to-SQL -->
+            <section id="llm-pipeline">
+                <h2>LLM Text-to-SQL Pipeline</h2>
+                <p>
+                    Users type natural-language questions. The backend wraps
+                    them with a schema prompt, sends to OpenRouter (Llama 3.3
+                    70B with multi-model fallback), validates the returned SQL
+                    through a strict guard, then executes it read-only against
+                    PostgreSQL.
+                </p>
+                <h3>Technical Excellence</h3>
+                <ul>
+                    <li><strong>Schema grounding:</strong> the system prompt includes table/column context so generated SQL is tied to the real schema.</li>
+                    <li><strong>Fallback strategy:</strong> the primary free model is retried 5 times, then the request rotates to 4 fallback models if needed.</li>
+                    <li><strong>SQL safety checks:</strong> only <code>SELECT</code> is allowed, write operations are blocked, and a <code>LIMIT</code> clause is required.</li>
+                </ul>
+                <h3>Runtime Safety Contract</h3>
+                <table class="snapshot-table">
+                    <thead>
+                        <tr>
+                            <th>Layer</th>
+                            <th>Rule</th>
+                            <th>Implementation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Prompt contract</td>
+                            <td>Model must output one raw <code>SELECT</code>, no markdown, max <code>LIMIT 50</code>, and <code>UNSAFE:</code> for disallowed asks</td>
+                            <td><code>internal/llm/schema_prompt.go</code></td>
+                        </tr>
+                        <tr>
+                            <td>Post-generation guard</td>
+                            <td>Strip code fences, block DML/DDL keywords, require <code>SELECT</code>, require <code>LIMIT</code></td>
+                            <td><code>internal/llm/query_guard.go</code></td>
+                        </tr>
+                        <tr>
+                            <td>Model resiliency</td>
+                            <td>Retry primary model 5 times, then rotate through 4 free fallback models</td>
+                            <td><code>internal/llm/openrouter.go</code></td>
+                        </tr>
+                        <tr>
+                            <td>Execution boundary</td>
+                            <td>LLM call timeout 20s, SQL execution timeout 10s, chat history trimmed to last 20 messages</td>
+                            <td><code>internal/service/chat.go</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h3>System Prompt Design</h3>
+                <p>
+                    The prompt in <code>internal/llm/schema_prompt.go</code>
+                    is a full SQL contract, not a short instruction. It
+                    includes a table-by-table schema reference, graph-to-SQL
+                    mapping rules, and strict output constraints so the model
+                    returns one executable PostgreSQL <code>SELECT</code>.
+                </p>
+                <ul>
+                    <li><strong>Schema coverage:</strong> prompt includes movies, genres, movie_genres, persons, movie_crew, movie_tags, users, user_preferences, user_mood_profile, watch_history, user_feedback, recommendations, and activity_events.</li>
+                    <li><strong>Graph translation rules:</strong> graph concepts (WATCHED, RATED, IN_GENRE, ACTED_IN, DIRECTED) are mapped to relational joins.</li>
+                    <li><strong>Output contract:</strong> return one raw SQL statement only, no markdown fences, no explanation text.</li>
+                    <li><strong>Safety contract:</strong> non-SELECT statements are forbidden; queries must include <code>LIMIT</code> with max 50; unsafe requests must return <code>UNSAFE: &lt;reason&gt;</code>.</li>
+                    <li><strong>Frontend alignment:</strong> when returning movie rows, the prompt asks for card fields like <code>tmdb_id</code>, <code>title</code>, <code>release_year</code>, <code>vote_avg</code>, and <code>poster_path</code>.</li>
+                </ul>
+                <div class="mermaid mermaid-focus">
+                    flowchart LR
+                    NL(["User question"])
+                    
+                    subgraph STAGE1["API & Chat Service"]
+                        direction TB
+                        VAL["Validate\ntrim to 20 msgs"]
+                        TO_LLM["LLM call\n20s timeout"]
+                        VAL --> TO_LLM
+                    end
+
+                    subgraph STAGE2["OpenRouter LLM"]
+                        direction TB
+                        PROMPT["Schema prompt\ngrounding"]
+                        PRIMARY["Llama-3.3-70B\nretry x5"]
+                        FB["Fallback pool\nHermes, Qwen\nGemma, Nemotron"]
+                        PROMPT --> PRIMARY
+                        PRIMARY -- "exhausted" --> FB
+                    end
+
+                    subgraph STAGE3["SQL Guard"]
+                        direction TB
+                        CLEAN["Strip fences\nnormalize"]
+                        CHKNODE["SELECT-only\nblock DML\nenforce LIMIT 50"]
+                        CLEAN --> CHKNODE
+                    end
+
+                    subgraph STAGE4["Execution & Format"]
+                        direction TB
+                        TO_SQL["SQL exec\n10s timeout"]
+                        PG2[("PostgreSQL")]
+                        RTYPE{"Result typing"}
+                        MOVIE["Movie grid"]
+                        GENERIC["Data table"]
+                        TO_SQL --> PG2
+                        PG2 --> RTYPE
+                        RTYPE -- "tmdb_id present" --> MOVIE
+                        RTYPE -- "other cols" --> GENERIC
+                    end
+
+                    OUT(["Response\n+ generated SQL"])
+
+                    NL --> VAL
+                    TO_LLM --> PROMPT
+                    PRIMARY --> CLEAN
+                    FB --> CLEAN
+                    CHKNODE --> TO_SQL
+                    MOVIE --> OUT
+                    GENERIC --> OUT
+                </div>
+            </section>
+
+            <hr />
+
+            <!-- Auth Flow -->
+            <section id="auth-flow">
+                <h2>Authentication Flow</h2>
+                <p>
+                    JWT access tokens (HS256, configurable expiry) plus
+                    refresh-token rotation. The refresh token format is
+                    <code>uuid:hex_secret</code> — only
+                    <code>sha256(secret)</code> is stored. Old tokens are
+                    revoked on rotation, preventing replay.
+                </p>
+                <div class="mermaid">
+                    sequenceDiagram
+                    participant C as Client
+                    participant H as Auth Handler
+                    participant S as Auth Service
+                    participant R as User Repo
+                    participant DB as PostgreSQL
+                    C->>H: POST /auth/register
+                    H->>S: Register(name, email, pass)
+                    S->>S: bcrypt.Hash(pass)
+                    S->>R: CreateUser (tx)
+                    R->>DB: INSERT users + preferences + mood_profile
+                    S->>S: Generate JWT + Refresh
+                    S-->>C: access_token, refresh_token
+                    C->>H: POST /auth/login
+                    H->>S: Login(email, pass)
+                    S->>R: GetByEmail
+                    R->>DB: SELECT users
+                    S->>S: bcrypt.Compare
+                    S->>S: Generate JWT + Refresh
+                    S-->>C: access_token, refresh_token
+                    C->>H: POST /auth/refresh
+                    H->>S: Refresh(old_token)
+                    S->>S: Parse uuid:secret
+                    S->>R: Validate sha256(secret)
+                    S->>R: Revoke old, insert new
+                    S-->>C: new_access, new_refresh
+                </div>
+            </section>
+
+            <hr />
+
+            <!-- Apache AGE Graph -->
+            <section id="graph">
+                <h2>Apache AGE Graph Model</h2>
+                <p>
+                    The <code>movie_graph</code> is built from relational tables
+                    and queried via Cypher through
+                    <code>ag_catalog.cypher()</code>. It supports genre-based
+                    recommendations, collaborative filtering, actor/director
+                    traversals, and explainability paths.
+                </p>
+                <h3>Technical Excellence</h3>
+                <ul>
+                    <li><strong>Single-database hybrid model:</strong> relational queries and AGE Cypher traversals run in the same PostgreSQL deployment.</li>
+                    <li><strong>Explainability-ready traversals:</strong> graph queries can return relationship paths, not just final movie IDs.</li>
+                    <li><strong>Collaborative filtering path:</strong> overlapping user ratings are used to surface unseen titles from similar users.</li>
+                </ul>
+                <h3>Recommendation Query Recipes</h3>
+                <table class="snapshot-table">
+                    <thead>
+                        <tr>
+                            <th>Recipe</th>
+                            <th>Cypher Pattern</th>
+                            <th>Where It Appears</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Connected by director</td>
+                            <td><code>(Movie)&lt;-[:DIRECTED]-(Person)-[:DIRECTED]-&gt;(Movie)</code></td>
+                            <td><code>GET /api/movies/{id}/graph-related</code></td>
+                        </tr>
+                        <tr>
+                            <td>Connected by cast</td>
+                            <td><code>(Movie)&lt;-[:ACTED_IN]-(Person)-[:ACTED_IN]-&gt;(Movie)</code></td>
+                            <td><code>GET /api/movies/{id}/graph-related</code></td>
+                        </tr>
+                        <tr>
+                            <td>Theme overlap</td>
+                            <td><code>(Movie)-[:IN_GENRE]-&gt;(Genre)&lt;-[:IN_GENRE]-(Movie)</code> with overlap ranking</td>
+                            <td><code>GET /api/movies/{id}/graph-related</code></td>
+                        </tr>
+                        <tr>
+                            <td>Collaborative filtering</td>
+                            <td>Users with overlapping high ratings, then unseen highly-rated titles from similar users</td>
+                            <td><code>GET /api/recommendations/graph</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="mermaid">
+                    flowchart LR
+                    U((User)) -- "WATCHED" --> M((Movie))
+                    U -- "RATED >= 4.0" --> M
+                    M -- "IN_GENRE" --> G((Genre))
+                    P((Person)) -- "ACTED_IN" --> M
+                    P -- "DIRECTED" --> M
+                    subgraph QUERIES["Graph Query Patterns"]
+                        direction TB
+                        Q1["Unseen movies from\nfavorite genres"]
+                        Q2["Collaborative filtering\noverlap >= 2 users"]
+                        Q3["Same actor/director\ntraversals"]
+                        Q4["Explainability paths\ngenre-based reasoning"]
+                    end
+                    M -..-> QUERIES
+                    U -..-> QUERIES
+                </div>
+            </section>
+
+            <hr />
+
+            <!-- Data Ingestion -->
+            <section id="ingestion">
+                <h2>Data Ingestion Pipeline</h2>
+                <p>
+                    CineMatch uses a concurrent Go pipeline to ingest, clean,
+                    and normalize movie data from 7 sources including IMDb,
+                    TMDB, and Kaggle.
+                </p>
+                <h3>Technical Excellence</h3>
+                <ul>
+                    <li><strong>Concurrent downloads:</strong> the downloader uses goroutines with semaphore limits to keep throughput high without exhausting memory.</li>
+                    <li><strong>Data filtering at ingest time:</strong> regex and adult-flag filters remove explicit/malformed records before load (about 43K rows filtered in project ingestion).</li>
+                    <li><strong>Load + optimize flow:</strong> bulk <code>COPY</code> into staging tables, then CTE-based normalization and index migrations for faster queries.</li>
+                </ul>
+                <div class="mermaid">
+                    flowchart LR
+                    subgraph SOURCES["7 Data Sources"]
+                        IMDB["IMDb TSVs\nbasics, ratings\ncrew, principals"]
+                        TMDB["TMDB CSV\n5K metadata"]
+                        KAGGLE["Kaggle sets\nNetflix, Movies"]
+                    end
+                    subgraph DL["Downloader CLI"]
+                        AUTH["Auth adapters\nNoAuth, Bearer\nBasic, APIKey"]
+                        CONC["Concurrent\ngoroutines\n+ semaphore"]
+                    end
+                    subgraph CLEANBOX["Data Quality"]
+                        FILTER["Explicit content\nregex filter\n43K rows removed"]
+                        ADULT["TMDB adult\nflag check"]
+                    end
+                    subgraph LOAD["Seed Pipeline"]
+                        STAGE["Staging tables\nbulk COPY"]
+                        CTE["Loading CTEs\npersons, crew\ngenres, movies"]
+                        IDX["Index migration\nGIN trigram\njoin indexes"]
+                    end
+                    PG3[("PostgreSQL\n100K+ movies")]
+                    IMDB & TMDB & KAGGLE --> AUTH --> CONC
+                    CONC --> FILTER & ADULT
+                    FILTER & ADULT --> STAGE --> CTE --> IDX --> PG3
+                </div>
+            </section>
+
+            <hr />
+
+            <!-- Deployment -->
+            <section id="deployment">
+                <h2>Deployment Architecture</h2>
+                <p>
+                    Two Docker Compose files: <code>docker-compose.yml</code>
+                    runs the database (custom PG16 image with AGE + PostGIS),
+                    <code>docker-compose.deploy.yml</code> runs the Go backend,
+                    React frontend (Nginx), and a Cloudflared tunnel for
+                    zero-trust HTTPS access.
+                </p>
+                <div class="mermaid">
+                    flowchart LR
+                    INET(["Internet"])
+                    subgraph CF["Cloudflare Zero Trust"]
+                        TUNNEL["cloudflared tunnel"]
+                    end
+                    subgraph DPLY["docker-compose.deploy.yml"]
+                        FE["cenimatch-frontend\nNginx :80\nReact/TS build"]
+                        BE["cenimatch-backend\nGo binary :8080"]
+                    end
+                    subgraph DBSTACK["docker-compose.yml"]
+                        DB2[("cenimatch-db\nPG16 + AGE + PostGIS\npgdata volume")]
+                    end
+                    INET -- "HTTPS" --> TUNNEL
+                    TUNNEL -- "app.domain" --> FE
+                    TUNNEL -- "api.domain" --> BE
+                    BE -- "pgx pool" --> DB2
+                    FE -- "VITE_API_URL" --> BE
+                </div>
+            </section>
+
+            <hr />
+
+            <!-- Features -->
+            <section id="features">
+                <h2>Features</h2>
+                <ul>
+                    <li>
+                        Interactive 5-step onboarding for cold-start
+                        personalization (account → genres → film anchors →
+                        preferences → mood)
+                    </li>
+                    <li>
+                        LLM-triggered database enrichment on movie insertion via
+                        PostgreSQL trigger
+                    </li>
+                    <li>
+                        Conversational movie search via text-to-SQL with
+                        multi-model LLM fallback and SQL safety guard
+                    </li>
+                    <li>
+                        Graph-based related movie discovery and personalized
+                        recommendations (Apache AGE Cypher)
+                    </li>
+                    <li>Mood-based quick pick with six mood categories</li>
+                    <li>
+                        JWT access + refresh token rotation with bcrypt hashing
+                    </li>
+                    <li>
+                        Query performance optimization: 68s → &lt;1s via CTE
+                        narrowing + index migration
+                    </li>
+                    <li>
+                        Data quality pipeline: 43K explicit rows filtered at
+                        ingestion
+                    </li>
+                    <li>City-level live activity map rendered with ECharts</li>
+                    <li>Analytics dashboards backed by PostgreSQL views</li>
+                </ul>
+                <h3>Potential Next Additions</h3>
+                <ul>
+                    <li>Add <code>GET /api/me</code> so frontend can fetch current user profile without decoding token client-side.</li>
+                    <li>Add cursor-based pagination for movie feeds (<code>after_id</code>/<code>after_score</code>) to avoid large offset scans.</li>
+                    <li>Add basic per-IP rate limiting on <code>/api/chat</code> and auth routes to protect free-tier model and login endpoints.</li>
+                    <li>Add an API docs page (OpenAPI JSON + simple Swagger UI) so teammates can test endpoints quickly.</li>
+                    <li>Add request-id response header in error payloads to make debugging logs much easier during demos.</li>
+                    <li>Add a nightly job to revoke expired refresh tokens (the repository method already exists).</li>
+                    <li>Add a small endpoint for graph explainability paths so recommendations can show exactly which edge/path triggered the match.</li>
+                </ul>
+            </section>
+
+            <hr />
+
+            <!-- Completed -->
+            <section id="completed">
+                <h2>Completed</h2>
+                <ul class="progress-list">
+                    <li class="done">
+                        Full auth system — register, login, refresh-token
+                        rotation, logout (4 endpoints, bcrypt + JWT HS256)
+                    </li>
+                    <li class="done">
+                        5-step onboarding with DB movie picker, genre weights,
+                        runtime/decade prefs, mood profile — all persisted in
+                        one transaction
+                    </li>
+                    <li class="done">
+                        Service layer extraction — clean handler → service →
+                        repository separation
+                    </li>
+                    <li class="done">
+                        Wired frontend to real backend data — paginated movie
+                        list, text search, detail, and related endpoints
+                    </li>
+                    <li class="done">
+                        Query performance: 68s → &lt;1s via CTE narrowing + GIN
+                        trigram and join index migration
+                    </li>
+                    <li class="done">
+                        Data quality pipeline — regex + adult-flag filter
+                        removed 43K explicit rows at ingestion time
+                    </li>
+                    <li class="done">
+                        Actor/crew ingest from
+                        <code>title.principals.tsv</code> — directors, actors,
+                        producers in <code>movie_crew</code>
+                    </li>
+                    <li class="done">
+                        LLM text-to-SQL pipeline — OpenRouter client with retry
+                        × 5 + 4 fallback models
+                    </li>
+                    <li class="done">
+                        SQL guard — SELECT-only whitelist, DML blocking, forced
+                        LIMIT 50
+                    </li>
+                    <li class="done">
+                        Chat page — full message history, dynamic movie grids /
+                        data tables, SQL transparency toggle
+                    </li>
+                    <li class="done">
+                        Graph recommendations via Apache AGE Cypher traversals
+                        with genre/rating-based fallback
+                    </li>
+                    <li class="done">
+                        Movie detail page — 3-column cast layout with DiceBear
+                        avatars, scrollable crew sections
+                    </li>
+                    <li class="done">
+                        Docker deployment — Go backend + React/Nginx frontend +
+                        Cloudflared tunnel for zero-trust HTTPS
+                    </li>
+                </ul>
+            </section>
+
+            <hr />
+
+            <!-- Project Structure -->
+            <section id="structure">
+                <h2>Project Structure</h2>
+                <div class="mermaid mermaid-focus">
+                    flowchart TB
+
+                    ROOT["cenimatch/"]
+
+                    subgraph CMD["cmd/ - Entry Points"]
+                        direction TB
+                        C1["cenimatch/main.go\nApp struct, signal handling\ngraceful shutdown"]
+                        C2["download/main.go\nflags: -o -s -w --list\nsource alias expansion"]
+                        C3["migrate/main.go\nsubcommands: reset, drop\ncreate, seed, status"]
+                    end
+
+                    subgraph INT["internal/"]
+                        direction TB
+
+                        CFG["config/\nenv.go - walk-up .env loader\nconfig.go - typed struct\nrequired/optional/duration helpers"]
+                        CNT["container/\ncontainer.go - New wires:\nconfig > pgxpool > DBManager > Server"]
+                        DOM["domain/\nerrors.go - ErrorCode enum\n10 codes: INTERNAL thru REFRESH_INVALID"]
+                        PRT["ports/\ndb.go - DBManager interface\nsecurity.go - Hasher, JWT\nRefreshTokenGenerator"]
+                        DD["dd/\ndownloader.go - AuthMethod interface\n4 impls, goroutine + semaphore\ndata.go - 7 Source definitions"]
+                        LLM2["llm/\nopenrouter.go - retry x5 + 4 fallbacks\nquery_guard.go - SELECT-only filter\nschema_prompt.go - grounding context"]
+                        MIG["migrator/\nmigrator.go - DropAllTables\nenum + sequence cleanup\nCreateTables, SeedData"]
+                        SRV["service/\nauth.go - register, login, refresh, logout\nchat.go - LLM orchestration + SQL exec\nonboarding.go - 5-step profile build\nfeedback.go - star ratings, dismiss"]
+
+                        subgraph INFRA["infra/"]
+                            direction TB
+                            DBPKG["database/\ndatabase.go - pgxpool wrapper\nAfterConnect type registration\ndb_manager.go - WithTx, WithTxOptions\nauto-rollback on error/panic"]
+                            HTTPPKG["http/\nserver.go - Chi mux setup\nhandlers/ - auth, movies, chat\nonboarding, feedback, graph, health\nmiddleware/ - cors, auth\nutils/ - JSON envelope, status mapping"]
+                            SECPKG["security/\nhasher.go - bcrypt\njwt.go - HS256 access tokens\nrefresh.go - uuid:secret format\nsha256 storage, rotation"]
+                            REPOPKG["repository/\nmovies_repo.go - CTE + lateral joins\nuser_repo.go - CRUD + tx support\ngraph queries - cypher via AGE"]
+                        end
+                    end
+
+                    subgraph UI["ui/src/ - React / TypeScript"]
+                        direction TB
+                        PAGES["pages/\nHome, MovieDetail, Chat\nSearch, Onboarding 5 steps\nDashboard, Login, Register"]
+                        COMPS["components/\nNavbar, MovieCard, MovieGrid\nMoodSelector, ChatMessage\nDataTable, CastSection"]
+                        UIAPI["api/\nrealApi.ts - axios instance\nauth, movies, chat, onboarding\nmappers.ts - DTO to domain"]
+                    end
+
+                    subgraph MG["migration/"]
+                        direction TB
+                        S01["schema-01.sql\n14 tables, 3 enums\nenrichment trigger"]
+                        S02["schema-02-indexes.sql\nGIN trigram, join indexes\n68s to under 1s queries"]
+                        SEED["seed.sh\nbulk COPY into staging\nCTE loading pipeline"]
+                        GRAPH["build-graph.sh\nAGE graph construction\nMovie, Genre, Person vertices"]
+                    end
+
+                    subgraph DEPLOY["deployment/"]
+                        direction TB
+                        DC1["docker-compose.yml\nPG16 + AGE + PostGIS\npgdata volume"]
+                        DC2["docker-compose.deploy.yml\nGo backend, React/Nginx\nCloudflared tunnel"]
+                        MK["Makefile + run.sh\nbuild, db, migrate\ndl, app targets"]
+                    end
+
+                    ROOT --> CMD & INT & UI & MG & DEPLOY
+                    C1 --> CNT
+                    CNT --> DBPKG & HTTPPKG
+                    HTTPPKG --> SRV
+                    SRV --> REPOPKG & SECPKG & LLM2
+                    REPOPKG --> DBPKG
+                    PAGES --> UIAPI
+                </div>
+            </section>
+
+            <hr />
+
+            <!-- Team -->
+            <section id="team">
                 <h2>Team</h2>
                 <div class="team-grid">
                     <div class="member-card">
-                        <img src="static/abdul.jpg" alt="Abdulrahman Alamoudi" />
+                        <img
+                            src="static/abdul.jpg"
+                            alt="Abdulrahman Alamoudi"
+                        />
                         <span class="name">Abdulrahman Alamoudi</span>
                     </div>
                     <div class="member-card">
@@ -196,28 +1579,42 @@
 
             <hr />
 
-            <section>
+            <!-- Responsibilities -->
+            <section id="responsibilities">
                 <h2>Responsibilities</h2>
                 <div class="team-list">
                     <div class="person">
                         <span class="name">Yazeed Alharthi</span>
-                        <span class="role">DB Design, Data Prep &amp; LLM-DB Integration, Backend</span>
+                        <span class="role"
+                            >DB Design &amp; Data Pipeline, Backend dev + API &amp; LLM-SQL
+                            Integration</span
+                        >
                     </div>
                     <div class="person">
-                        <span class="name">Jack Lyons <span class="leader-badge">Team Leader</span></span>
-                        <span class="role">Backend Dev, API &amp; User Questionnaire</span>
+                        <span class="name"
+                            >Jack Lyons
+                            <span class="leader-badge">Team Leader</span></span
+                        >
+                        <span class="role">Backend Dev, Writing</span>
                     </div>
                     <div class="person">
                         <span class="name">Gary Young</span>
-                        <span class="role">Recommendation Logic &amp; User Simulation</span>
+                        <span class="role"
+                            >Recommendation Logic &amp; Spatial Analysis</span
+                        >
                     </div>
                     <div class="person">
                         <span class="name">Yordanos Tessema</span>
-                        <span class="role">React/TS Frontend, ECharts &amp; UX</span>
+                        <span class="role"
+                            >React/TS Frontend, ECharts &amp; UX</span
+                        >
                     </div>
                     <div class="person">
                         <span class="name">Abdulrahman Alamoudi</span>
-                        <span class="role">Apache AGE Graph &amp; Spatial Queries (PostGIS)</span>
+                        <span class="role"
+                            >Apache AGE Graph, Data Pipeline, Spatial Queries (PostGIS),
+                            Deployment</span
+                        >
                     </div>
                 </div>
             </section>
